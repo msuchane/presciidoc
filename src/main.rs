@@ -14,8 +14,11 @@ use std::fs;
 
 use color_eyre::Result;
 
+mod asciidoc;
 mod cli;
 mod logging;
+
+use asciidoc::AsciiDocText;
 
 fn main() -> Result<()> {
     // Enable full-featured error logging.
@@ -29,7 +32,8 @@ fn main() -> Result<()> {
     println!("{:#?}", args);
 
     let file = fs::read_to_string(args.file)?;
-    println!("{file}");
+    let adoc = AsciiDocText::new(&file);
+    println!("{}", adoc.text);
 
     Ok(())
 }
