@@ -16,10 +16,12 @@
 
 use crate::lex;
 
+#[derive(Debug)]
 pub struct ParsedAsciiDoc<'a> {
     lines: Vec<Line<'a>>,
 }
 
+#[derive(Debug)]
 pub enum Line<'a> {
     Para(&'a str),
     Comment(&'a str),
@@ -28,12 +30,52 @@ pub enum Line<'a> {
 
 impl<'a> lex::LexedAsciiDoc<'a> {
     pub fn parse(&self) -> ParsedAsciiDoc {
+        let mut in_comment = false;
+        let mut in_literal = false;
+
         let mut lines = Vec::new();
 
-        for lexed_line in self.lines {
-            todo!()
+        for lexed_line in &self.lines {
+            match lexed_line {
+                lex::Line::LineComment(text) => {
+                    let parsed_line = if in_literal {
+                        Line::Literal(text)
+                    } else {
+                        Line::Comment(text)
+                    };
+                    lines.push(parsed_line);
+                }
+                lex::Line::BlockCommentDelimeter(text) => {
+                    let parsed_line = if in_literal {
+                        Line::Literal(text)
+                    } else {
+                        in_comment = !in_comment;
+                        Line::Comment(text)
+                    };
+                    lines.push(parsed_line);
+                }
+                lex::Line::LiteralDelimeter(text) => {
+                    let parsed_line = if in_comment {
+                        Line::Comment(text)
+                    } else {
+                        in_literal = !in_literal;
+                        Line::Literal(text)
+                    };
+                    lines.push(parsed_line);
+                }
+                lex::Line::Text(text) => {
+                    let parsed_line = if in_literal {
+                        Line::Literal(text)
+                    } else if in_comment {
+                        Line::Comment(text)
+                    } else {
+                        Line::Para(text)
+                    };
+                    lines.push(parsed_line);
+                }
+            }
         }
 
-        todo!()
+        ParsedAsciiDoc { lines }
     }
 }

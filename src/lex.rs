@@ -17,7 +17,7 @@
 use crate::AsciiDocText;
 
 #[derive(Debug)]
-enum Line<'a> {
+pub enum Line<'a> {
     Text(&'a str),
     LineComment(&'a str),
     BlockCommentDelimeter(&'a str),
