@@ -6,7 +6,7 @@ description = "Preprocessing AsciiDoc for other tools"
 authors = ["Marek Suchánek <marek.suchanek@protonmail.com>"]
 license = "Apache-2.0"
 # Check the Rust version using `cargo msrv verify`.
-#rust-version = "1.63"
+rust-version = "1.67"
 #documentation = "https://docs.rs/presciidoc"
 readme = "README.md"
 repository = "https://github.com/msuchane/presciidoc/"
