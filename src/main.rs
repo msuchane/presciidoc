@@ -34,6 +34,7 @@ mod asciidoc;
 mod cli;
 mod lex;
 mod logging;
+mod parse;
 
 use asciidoc::AsciiDocText;
 

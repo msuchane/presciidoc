@@ -38,7 +38,7 @@ impl<'a> Line<'a> {
 
 #[derive(Debug)]
 pub struct LexedAsciiDoc<'a> {
-    lines: Vec<Line<'a>>,
+    pub lines: Vec<Line<'a>>,
 }
 
 impl AsciiDocText {
