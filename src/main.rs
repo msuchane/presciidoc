@@ -32,6 +32,7 @@ use color_eyre::Result;
 
 mod asciidoc;
 mod cli;
+mod lex;
 mod logging;
 
 use asciidoc::AsciiDocText;
@@ -49,8 +50,8 @@ fn main() -> Result<()> {
 
     let file = fs::read_to_string(args.file)?;
     let adoc = AsciiDocText::new(file);
-    let parsed = adoc.parse();
-    println!("{:#?}", parsed);
+    let lexed = adoc.lex();
+    println!("{:#?}", lexed);
 
     Ok(())
 }
