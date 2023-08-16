@@ -18,7 +18,7 @@ use crate::lex;
 
 #[derive(Debug)]
 pub struct ParsedAsciiDoc<'a> {
-    lines: Vec<Line<'a>>,
+    pub lines: Vec<Line<'a>>,
 }
 
 #[derive(Debug)]
@@ -77,5 +77,37 @@ impl<'a> lex::LexedAsciiDoc<'a> {
         }
 
         ParsedAsciiDoc { lines }
+    }
+}
+
+impl<'a> ParsedAsciiDoc<'a> {
+    pub fn reconsider_lines(self, comments: bool, literals: bool, paras: bool) -> Vec<&'a str> {
+        let line_replacement = "";
+        self.lines
+            .into_iter()
+            .map(|line| match line {
+                Line::Comment(text) => {
+                    if comments {
+                        text
+                    } else {
+                        line_replacement
+                    }
+                }
+                Line::Literal(text) => {
+                    if literals {
+                        text
+                    } else {
+                        line_replacement
+                    }
+                }
+                Line::Para(text) => {
+                    if paras {
+                        text
+                    } else {
+                        line_replacement
+                    }
+                }
+            })
+            .collect()
     }
 }

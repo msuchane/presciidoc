@@ -47,13 +47,19 @@ fn main() -> Result<()> {
     // Initialize the logging system based on the set verbosity
     logging::initialize_logger(args.verbose)?;
 
-    println!("{:#?}", args);
+    log::debug!("{:#?}", args);
 
     let file = fs::read_to_string(args.file)?;
     let adoc = AsciiDocText::new(file);
     let lexed = adoc.lex();
     let parsed = lexed.parse();
-    println!("{:#?}", parsed);
+    log::debug!("{:#?}", parsed);
+
+    let resulting_lines =
+        parsed.reconsider_lines(!args.no_comments, !args.no_blocks, !args.no_paras);
+    let resulting_document = resulting_lines.join("\n");
+
+    println!("{resulting_document}");
 
     Ok(())
 }
