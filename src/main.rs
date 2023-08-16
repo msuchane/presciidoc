@@ -48,8 +48,9 @@ fn main() -> Result<()> {
     println!("{:#?}", args);
 
     let file = fs::read_to_string(args.file)?;
-    let adoc = AsciiDocText::new(&file);
-    println!("{}", adoc.text);
+    let adoc = AsciiDocText::new(file);
+    let parsed = adoc.parse();
+    println!("{:#?}", parsed);
 
     Ok(())
 }

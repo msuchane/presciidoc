@@ -15,16 +15,32 @@
 */
 
 /// A String loaded from a file with AsciiDoc markup.
-pub struct AsciiDocText<'a> {
-    pub text: &'a str,
-    numbered_lines: Vec<(usize, &'a str)>,
+#[derive(Debug)]
+pub struct AsciiDocText {
+    pub text: String,
 }
 
-impl<'a> AsciiDocText<'a> {
-    pub fn new(text: &'a str) -> Self {
+#[derive(Debug)]
+enum Line<'a> {
+    Para(&'a str),
+    Comment(&'a str),
+    Literal(&'a str),
+}
+
+#[derive(Debug)]
+pub struct ParsedAsciiDoc<'a> {
+    lines: Vec<Line<'a>>,
+}
+
+impl AsciiDocText {
+    pub fn new(text: String) -> Self {
         Self {
             text,
-            numbered_lines: text.lines().enumerate().collect(),
         }
+    }
+
+    pub fn parse(&self) -> ParsedAsciiDoc {
+        let lines: Vec<_> = self.text.lines().map(|line| Line::Para(line)).collect();
+        ParsedAsciiDoc { lines }
     }
 }
