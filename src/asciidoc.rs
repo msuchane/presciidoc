@@ -27,6 +27,16 @@ enum Line<'a> {
     Literal(&'a str),
 }
 
+impl<'a> Line<'a> {
+    pub fn new(text: &'a str) -> Self {
+        if text.starts_with("//") {
+            Self::Comment(text)
+        } else {
+            Self::Para(text)
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct ParsedAsciiDoc<'a> {
     lines: Vec<Line<'a>>,
@@ -34,13 +44,11 @@ pub struct ParsedAsciiDoc<'a> {
 
 impl AsciiDocText {
     pub fn new(text: String) -> Self {
-        Self {
-            text,
-        }
+        Self { text }
     }
 
     pub fn parse(&self) -> ParsedAsciiDoc {
-        let lines: Vec<_> = self.text.lines().map(|line| Line::Para(line)).collect();
+        let lines: Vec<_> = self.text.lines().map(Line::new).collect();
         ParsedAsciiDoc { lines }
     }
 }
