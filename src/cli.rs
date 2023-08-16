@@ -26,21 +26,11 @@ use bpaf::Bpaf;
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version)]
 pub struct Cli {
-    /// Strip the file of all comments.
-    #[bpaf(short('c'), long)]
-    pub no_comments: bool,
+    #[bpaf(external, optional)]
+    pub comments: Option<Comments>,
 
-    /// Strip the file of everything except comments.
-    #[bpaf(short('C'), long)]
-    pub only_comments: bool,
-
-    /// Strip the file of all code blocks (listing, source, code blocks).
-    #[bpaf(short('b'), long)]
-    pub no_blocks: bool,
-
-    /// Strip the file of everything except code blocks (listing, source, code blocks).
-    #[bpaf(short('B'), long)]
-    pub only_blocks: bool,
+    #[bpaf(external, optional)]
+    pub blocks: Option<Blocks>,
 
     /// Display debugging messages.
     #[bpaf(short, long)]
@@ -49,6 +39,28 @@ pub struct Cli {
     /// Process this AsciiDoc file.
     #[bpaf(positional("FILE"))]
     pub file: PathBuf,
+}
+
+#[derive(Clone, Debug, Bpaf)]
+pub enum Comments {
+    /// Strip the file of all comments.
+    #[bpaf(short('c'), long)]
+    NoComments,
+
+    /// Strip the file of everything except comments.
+    #[bpaf(short('C'), long)]
+    OnlyComments,
+}
+
+#[derive(Clone, Debug, Bpaf)]
+pub enum Blocks {
+    /// Strip the file of all code blocks (listing, source, code blocks).
+    #[bpaf(short('b'), long)]
+    NoBlocks,
+
+    /// Strip the file of everything except code blocks (listing, source, code blocks).
+    #[bpaf(short('B'), long)]
+    OnlyBlocks,
 }
 
 /// Get command-line arguments as the `Cli` struct.
