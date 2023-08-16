@@ -57,7 +57,20 @@ fn main() -> Result<()> {
 
     let resulting_lines =
         parsed.reconsider_lines(!args.no_comments, !args.no_blocks, !args.no_paras);
-    let resulting_document = resulting_lines.join("\n");
+
+    let resulting_document = if args.remove_lines {
+        resulting_lines
+            .into_iter()
+            .flatten()
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        resulting_lines
+            .into_iter()
+            .map(|line| line.unwrap_or(""))
+            .collect::<Vec<_>>()
+            .join("\n")
+    };
 
     println!("{resulting_document}");
 

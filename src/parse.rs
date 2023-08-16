@@ -81,30 +81,34 @@ impl<'a> lex::LexedAsciiDoc<'a> {
 }
 
 impl<'a> ParsedAsciiDoc<'a> {
-    pub fn reconsider_lines(self, comments: bool, literals: bool, paras: bool) -> Vec<&'a str> {
-        let line_replacement = "";
+    pub fn reconsider_lines(
+        self,
+        comments: bool,
+        literals: bool,
+        paras: bool,
+    ) -> Vec<Option<&'a str>> {
         self.lines
             .into_iter()
             .map(|line| match line {
                 Line::Comment(text) => {
                     if comments {
-                        text
+                        Some(text)
                     } else {
-                        line_replacement
+                        None
                     }
                 }
                 Line::Literal(text) => {
                     if literals {
-                        text
+                        Some(text)
                     } else {
-                        line_replacement
+                        None
                     }
                 }
                 Line::Para(text) => {
                     if paras {
-                        text
+                        Some(text)
                     } else {
-                        line_replacement
+                        None
                     }
                 }
             })

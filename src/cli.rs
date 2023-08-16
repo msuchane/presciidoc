@@ -38,6 +38,10 @@ pub struct Cli {
     #[bpaf(short('p'), long)]
     pub no_paras: bool,
 
+    /// Remove the selected lines rather than replacing them with blank lines.
+    #[bpaf(short('r'), long)]
+    pub remove_lines: bool,
+
     /// Display debugging messages.
     #[bpaf(short, long)]
     pub verbose: bool,
