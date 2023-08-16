@@ -23,14 +23,19 @@ pub struct AsciiDocText {
 #[derive(Debug)]
 enum Line<'a> {
     Para(&'a str),
-    Comment(&'a str),
-    Literal(&'a str),
+    LineComment(&'a str),
+    BlockCommentDelimeter(&'a str),
+    BlockCommentContent(&'a str),
+    LiteralDelimeter(&'a str),
+    LiteralContent(&'a str),
 }
 
 impl<'a> Line<'a> {
     pub fn new(text: &'a str) -> Self {
-        if text.starts_with("//") {
-            Self::Comment(text)
+        if text == "////" {
+            Self::BlockCommentDelimeter(text)
+        } else if text.starts_with("//") {
+            Self::LineComment(text)
         } else {
             Self::Para(text)
         }
@@ -48,7 +53,12 @@ impl AsciiDocText {
     }
 
     pub fn parse(&self) -> ParsedAsciiDoc {
-        let lines: Vec<_> = self.text.lines().map(Line::new).collect();
+        let mut lines = Vec::new();
+
+        for line in self.text.lines() {
+            lines.push(Line::new(line));
+        }
+
         ParsedAsciiDoc { lines }
     }
 }
