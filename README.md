@@ -36,4 +36,56 @@ You can install `presciidoc` on various operating systems using several package 
 
 ## Usage
 
-TODO
+`presciidoc` reads a single AsciiDoc file, either from the specified file path or from the standard input (`stdin`) if you provide no file.
+
+* By default, it performs no actions on the document and prints it back to the terminal (`stdout`). For example:
+
+    ```
+    $ presciidoc proc_configuring-thing.adoc
+    
+    // The document starts here.
+    [id="configuring-thing"]
+    = Configuring thing
+    
+    ////
+    Enter a module introduction here.
+    ////
+    An introduction...
+    ```
+
+* You can use the `--no-comments` (`-c`) option to remove all line comments and comment blocks. `presciidoc` replaces them with blank lines so that all line numbers still match the original file:
+
+    ```
+    $ presciidoc --no-comments proc_configuring-thing.adoc
+    
+    
+    [id="configuring-thing"]
+    = Configuring thing
+    
+    
+    
+    
+    An introduction...
+    ```
+
+* To remove the comments completely, rather than replacing them, add the `--remove-lines` (`-r`) option:
+
+    ```
+    $ presciidoc --no-comments --remove-lines proc_configuring-thing.adoc
+    
+    [id="configuring-thing"]
+    = Configuring thing
+    
+    An introduction...
+    ```
+
+* To save the changes, you can overwrite the original file or create a new file by redirecting the output:
+
+    ```
+    $ presciidoc -c -r proc_configuring-thing.adoc > modified.adoc
+    
+    [id="configuring-thing"]
+    = Configuring thing
+    
+    An introduction...
+    ```
