@@ -1,5 +1,5 @@
 Name: presciidoc
-Summary: Preprocessing AsciiDoc for other tools
+Summary: Preprocessing AsciiDoc for other tools.
 Version: 0.1.0
 Release: 1%{?dist}
 License: ASL 2.0
@@ -15,7 +15,7 @@ BuildRequires: rust
 BuildRequires: cargo
 
 %description
-Preprocessing AsciiDoc for other tools
+Preprocessing AsciiDoc for other tools (WIP). The goal of this program is to partially parse an AsciiDoc file, remove certain non-paragraph elements, and present the document as a syntax tree. Other tools can later analyze or further process the representation.
 
 # Disable debugging packages. RPM looks for them even though none are created,
 # and that breaks the build if you don't set this option.
