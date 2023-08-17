@@ -27,6 +27,7 @@
 #![forbid(unsafe_code)]
 
 use std::fs;
+use std::io;
 
 use color_eyre::Result;
 
@@ -49,7 +50,12 @@ fn main() -> Result<()> {
 
     log::debug!("{:#?}", args);
 
-    let file = fs::read_to_string(args.file)?;
+    let file = if let Some(path) = args.file {
+        fs::read_to_string(path)?
+    } else {
+        read_stdin()?
+    };
+
     let adoc = AsciiDocText::new(file);
     let lexed = adoc.lex();
     let parsed = lexed.parse();
@@ -75,4 +81,14 @@ fn main() -> Result<()> {
     println!("{resulting_document}");
 
     Ok(())
+}
+
+fn read_stdin() -> Result<String> {
+    let mut buffer = String::new();
+
+    for line in io::stdin().lines() {
+        buffer.push_str(&line?);
+        buffer.push('\n');
+    }
+    Ok(buffer)
 }

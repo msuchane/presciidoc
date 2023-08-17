@@ -46,9 +46,9 @@ pub struct Cli {
     #[bpaf(short, long)]
     pub verbose: bool,
 
-    /// Process this AsciiDoc file.
+    /// Process this AsciiDoc file. Otherwise, the program reads from standard input.
     #[bpaf(positional("FILE"))]
-    pub file: PathBuf,
+    pub file: Option<PathBuf>,
 }
 
 /// Get command-line arguments as the `Cli` struct.
