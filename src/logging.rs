@@ -38,7 +38,7 @@ pub fn initialize_logger(verbose: bool) -> Result<()> {
         verbosity,
         config,
         // Mixed mode prints errors to stderr and info to stdout. Not sure about the other levels.
-        TerminalMode::Mixed,
+        TerminalMode::Stderr,
         // Try to use color if possible.
         ColorChoice::Auto,
     )

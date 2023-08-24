@@ -27,7 +27,7 @@
 #![forbid(unsafe_code)]
 
 use std::fs;
-use std::io;
+use std::io::{self, Write};
 
 use color_eyre::Result;
 
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
             .join("\n")
     };
 
-    println!("{resulting_document}");
+    io::stdout().write_all(resulting_document.as_bytes())?;
 
     Ok(())
 }
