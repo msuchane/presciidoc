@@ -78,11 +78,14 @@ fn main() -> Result<()> {
             .join("\n")
     };
 
+    // Print the final result to stdout.
+    // This is a replacement for println that works around a problem with a broken pipe.
     io::stdout().write_all(resulting_document.as_bytes())?;
 
     Ok(())
 }
 
+/// Read a string from stdin when `presciidoc` runs in a shell pipe.
 fn read_stdin() -> Result<String> {
     let mut buffer = String::new();
 
