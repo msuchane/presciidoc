@@ -80,7 +80,14 @@ fn main() -> Result<()> {
 
     // Print the final result to stdout.
     // This is a replacement for println that works around a problem with a broken pipe.
-    io::stdout().write_all(resulting_document.as_bytes())?;
+    let status = io::stdout().write_all(resulting_document.as_bytes());
+    // If the error is a "broken pipe", report it but treat it as success.
+    // The operating system might use the broken pipe signal to simply stop the program.
+    if let Err(e) = status {
+        if e.kind() == io::ErrorKind::BrokenPipe {
+            log::warn!("Broken pipe. Continuing. {e}");
+        }
+    }
 
     Ok(())
 }
