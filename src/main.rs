@@ -86,6 +86,9 @@ fn main() -> Result<()> {
     if let Err(e) = status {
         if e.kind() == io::ErrorKind::BrokenPipe {
             log::warn!("Broken pipe. Continuing. {e}");
+        } else {
+            // All other errors are real errors. Propagate them.
+            return Err(e.into());
         }
     }
 
