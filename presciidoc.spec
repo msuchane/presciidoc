@@ -11,8 +11,10 @@ Source0: https://github.com/msuchane/%{name}/archive/refs/tags/v%{version}.tar.g
 # This works fine with Fedora and RHEL, but breaks the SUSE build:
 # ExclusiveArch: %{rust_arches}
 
-BuildRequires: rust
-BuildRequires: cargo
+# Dependencies of the Rust compiler:
+BuildRequires: make
+BuildRequires: gcc
+BuildRequires: llvm
 
 %description
 Preprocessing AsciiDoc for other tools (WIP). The goal of this program is to partially parse an AsciiDoc file, remove certain non-paragraph elements, and present the document as a syntax tree. Other tools can later analyze or further process the representation.
@@ -26,6 +28,9 @@ Preprocessing AsciiDoc for other tools (WIP). The goal of this program is to par
 %setup -q
 
 %build
+# Install the latest Rust compiler.
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --component cargo rust-std rustc
+
 # Build the binary.
 cargo build --release
 
