@@ -32,7 +32,7 @@ Preprocessing AsciiDoc for other tools (WIP). The goal of this program is to par
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --component cargo rust-std rustc
 
 # Build the binary.
-cargo build --release
+~/.cargo/bin/cargo build --release
 
 %install
 # Clean up previous artifacts.
