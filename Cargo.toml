@@ -17,7 +17,7 @@ keywords = ["asciidoc", "documentation", "RedHat"]
 
 [dependencies]
 bpaf = { version = "0.9", features = ["derive", "bright-color"]}
-regex = "1.9"
+regex = "1.10"
 log = "0.4"
 simplelog = "0.12"
 # Disable support for tracing_error and SpanTrace in eyre
