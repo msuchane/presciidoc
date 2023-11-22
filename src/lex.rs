@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+use regex::Regex;
+
 use crate::AsciiDocText;
 
 #[derive(Debug)]
@@ -26,10 +28,16 @@ pub enum Line<'a> {
 
 impl<'a> Line<'a> {
     pub fn new(text: &'a str) -> Self {
-        if text == "////" {
+        let block_comment_re = Regex::new(r"^////+$").unwrap();
+        let line_comment_re = Regex::new(r"^//[^/].*").unwrap();
+        let literal_re = Regex::new(r"^(----+|\.\.\.\.+)$").unwrap();
+
+        if block_comment_re.is_match(text) {
             Self::BlockCommentDelimeter(text)
-        } else if text.starts_with("//") {
+        } else if line_comment_re.is_match(text) {
             Self::LineComment(text)
+        } else if literal_re.is_match(text) {
+            Self::LiteralDelimeter(text)
         } else {
             Self::Text(text)
         }
