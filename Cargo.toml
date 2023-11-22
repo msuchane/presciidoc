@@ -1,6 +1,6 @@
 [package]
 name = "presciidoc"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Preprocessing AsciiDoc for other tools."
 authors = ["Marek Suchánek <marek.suchanek@protonmail.com>"]
