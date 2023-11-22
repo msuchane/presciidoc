@@ -238,7 +238,7 @@ checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
 
 [[package]]
 name = "presciidoc"
-version = "0.2.3"
+version = "0.3.0"
 dependencies = [
  "bpaf",
  "color-eyre",
