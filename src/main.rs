@@ -30,6 +30,7 @@ use std::fs;
 use std::io::{self, Write};
 
 use color_eyre::Result;
+use color_eyre::eyre::WrapErr;
 
 mod asciidoc;
 mod cli;
@@ -48,12 +49,12 @@ fn main() -> Result<()> {
     // Initialize the logging system based on the set verbosity
     logging::initialize_logger(args.verbose)?;
 
-    log::debug!("{:#?}", args);
+    log::debug!("Command-line arguments: {:#?}", args);
 
     let file = if let Some(path) = args.file {
-        fs::read_to_string(path)?
+        fs::read_to_string(path).wrap_err("Failed to read the input file.")?
     } else {
-        read_stdin()?
+        read_stdin().wrap_err("Failed to read from standard input.")?
     };
 
     let has_final_newline = &file.ends_with("\n");
