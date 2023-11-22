@@ -30,43 +30,68 @@ pub enum Line<'a> {
 
 impl<'a> lex::LexedAsciiDoc<'a> {
     pub fn parse(&self) -> ParsedAsciiDoc {
-        let mut in_comment = false;
-        let mut in_literal = false;
+        // These values act as "extra bools": They store a truth value (are we inside a block?)
+        // and they also store the exact delimiter that opened the block, so that we can
+        // match the same ending delimiter later.
+        let mut in_comment = None;
+        let mut in_literal = None;
 
+        // This vector stores the resulting, parsed lines.
         let mut lines = Vec::new();
 
         for lexed_line in &self.lines {
             match lexed_line {
+                // Parse line comments.
                 lex::Line::LineComment(text) => {
-                    let parsed_line = if in_literal {
+                    let parsed_line = if in_literal.is_some() {
                         Line::Literal(text)
                     } else {
                         Line::Comment(text)
                     };
                     lines.push(parsed_line);
                 }
+                // Parse block comments.
                 lex::Line::BlockCommentDelimeter(text) => {
-                    let parsed_line = if in_literal {
+                    // If the line appears as a block comment, but we're in a literal block,
+                    // the line is in fact a literal.
+                    let parsed_line = if in_literal.is_some() {
                         Line::Literal(text)
+                    // If we're inside a comment block...
+                    } else if let Some(delimiter) = in_comment {
+                        // If the block delimiters match, close the comment block here.
+                        if delimiter == text {
+                            in_comment = None;
+                        }
+                        // Up to and including the closing delimiter, everything is a comment block.
+                        Line::Comment(text)
+                    // If we're not inside any block...
                     } else {
-                        in_comment = !in_comment;
+                        // Open a comment block here.
+                        in_comment = Some(text);
                         Line::Comment(text)
                     };
                     lines.push(parsed_line);
                 }
+                // Parse literal blocks. See the comments on the `BlockCommentDelimeter` parsing.
                 lex::Line::LiteralDelimeter(text) => {
-                    let parsed_line = if in_comment {
+                    let parsed_line = if in_comment.is_some() {
                         Line::Comment(text)
+                    } else if let Some(delimiter) = in_literal {
+                        if delimiter == text {
+                            in_literal = None;
+                        }
+                        Line::Literal(text)
                     } else {
-                        in_literal = !in_literal;
+                        in_literal = Some(text);
                         Line::Literal(text)
                     };
                     lines.push(parsed_line);
                 }
+                // Parse other text. This is any element that wasn't lexed as any particular kind before.
                 lex::Line::Text(text) => {
-                    let parsed_line = if in_literal {
+                    let parsed_line = if in_literal.is_some() {
                         Line::Literal(text)
-                    } else if in_comment {
+                    } else if in_comment.is_some() {
                         Line::Comment(text)
                     } else {
                         Line::Para(text)

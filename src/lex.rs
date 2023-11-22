@@ -21,10 +21,8 @@ use crate::AsciiDocText;
 
 const REGEX_ERROR: &str = "Invalid built-in regular expression.";
 
-static BLOCK_COMMENT_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r"^////+$").expect(REGEX_ERROR));
-static LINE_COMMENT_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r"^//[^/].*").expect(REGEX_ERROR));
+static BLOCK_COMMENT_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^////+$").expect(REGEX_ERROR));
+static LINE_COMMENT_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^//[^/].*").expect(REGEX_ERROR));
 static LITERAL_RE: Lazy<Regex> =
     Lazy::new(|| Regex::new(r"^(----+|\.\.\.\.+)$").expect(REGEX_ERROR));
 
