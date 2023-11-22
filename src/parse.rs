@@ -59,6 +59,9 @@ impl<'a> lex::LexedAsciiDoc<'a> {
                     // If we're inside a comment block...
                     } else if let Some(delimiter) = in_comment {
                         // If the block delimiters match, close the comment block here.
+                        // TODO: Find out if the delimiter *lines* must always be identical,
+                        // or if one of them can have whitespace or some other stuff at the end
+                        // and still match as closing.
                         if delimiter == text {
                             in_comment = None;
                         }
