@@ -79,6 +79,14 @@ You can install `presciidoc` on various operating systems using several package 
     An introduction...
     ```
 
+* To calculate how many lines in the file are comments or literals, use the `--fraction` (`-f`) option. This calculates the percentage of the lines that would otherwise get removed:
+
+    ```
+    $ presciidoc --no-comments --fraction proc_configuring-thing.adoc
+
+    27.8%
+    ```
+
 * To save the changes, you can overwrite the original file or create a new file by redirecting the output:
 
     ```
