@@ -56,6 +56,8 @@ fn main() -> Result<()> {
         read_stdin()?
     };
 
+    let has_final_newline = &file.ends_with("\n");
+
     let adoc = AsciiDocText::new(file);
     let lexed = adoc.lex();
     let parsed = lexed.parse();
@@ -64,7 +66,7 @@ fn main() -> Result<()> {
     let resulting_lines =
         parsed.reconsider_lines(!args.no_comments, !args.no_blocks, !args.no_paras);
 
-    let resulting_document = if args.remove_lines {
+    let mut resulting_document = if args.remove_lines {
         resulting_lines
             .into_iter()
             .flatten()
@@ -77,6 +79,12 @@ fn main() -> Result<()> {
             .collect::<Vec<_>>()
             .join("\n")
     };
+
+    // If the original file ended with a newline, add it to the output, too.
+    // Otherwise, the previous line separation would have removed it.
+    if *has_final_newline {
+        resulting_document.push('\n');
+    }
 
     // Print the final result to stdout.
     // This is a replacement for println that works around a problem with a broken pipe.
