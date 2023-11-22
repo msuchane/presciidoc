@@ -38,9 +38,8 @@ pub struct Cli {
     #[bpaf(short('p'), long)]
     pub no_paras: bool,
 
-    /// Remove the selected lines rather than replacing them with blank lines.
-    #[bpaf(short('r'), long)]
-    pub remove_lines: bool,
+    #[bpaf(external, fallback(OutputBehavior::Default))]
+    pub output_behavior: OutputBehavior,
 
     /// Display debugging messages.
     #[bpaf(short, long)]
@@ -49,6 +48,24 @@ pub struct Cli {
     /// Process this AsciiDoc file. Otherwise, the program reads from standard input.
     #[bpaf(positional("FILE"))]
     pub file: Option<PathBuf>,
+}
+
+#[derive(Clone, Copy, Debug, Bpaf)]
+pub enum OutputBehavior {
+    /// Generate the file without any comments.
+    /// This option is now the default.
+    /// The option is hidden, has no effect, and exists only for compatibility
+    /// with previous releases.
+    /// Remove the selected lines rather than replacing them with blank lines.
+    #[bpaf(short('r'), long)]
+    RemoveLines,
+    /// Instead of the modified file content, only calculate what percentage
+    /// of the lines in the file would get removed by this command.
+    /// In other words, this tells you the percentage of comments, literals, etc. in the file.
+    #[bpaf(short('f'), long)]
+    Fraction,
+    #[bpaf(hide)]
+    Default,
 }
 
 /// Get command-line arguments as the `Cli` struct.
