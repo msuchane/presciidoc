@@ -1,8 +1,10 @@
-# presciidoc
+# presciidoc (WIP)
 
-Preprocessing AsciiDoc for other tools (WIP).
+Preprocessing AsciiDoc for other tools.
 
 The goal of this program is to partially parse an AsciiDoc file, remove certain non-paragraph elements, and present the document as a syntax tree. Other tools can later analyze or further process the representation.
+
+**Warning:** This tool is a work in progress and an experiment. It cannot parse the vast majority of AsciiDoc syntax.
 
 ## Installation
 
