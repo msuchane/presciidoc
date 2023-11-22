@@ -14,9 +14,19 @@
    limitations under the License.
 */
 
+use once_cell::sync::Lazy;
 use regex::Regex;
 
 use crate::AsciiDocText;
+
+const REGEX_ERROR: &str = "Invalid built-in regular expression.";
+
+static BLOCK_COMMENT_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"^////+$").expect(REGEX_ERROR));
+static LINE_COMMENT_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"^//[^/].*").expect(REGEX_ERROR));
+static LITERAL_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"^(----+|\.\.\.\.+)$").expect(REGEX_ERROR));
 
 #[derive(Debug)]
 pub enum Line<'a> {
@@ -28,15 +38,11 @@ pub enum Line<'a> {
 
 impl<'a> Line<'a> {
     pub fn new(text: &'a str) -> Self {
-        let block_comment_re = Regex::new(r"^////+$").unwrap();
-        let line_comment_re = Regex::new(r"^//[^/].*").unwrap();
-        let literal_re = Regex::new(r"^(----+|\.\.\.\.+)$").unwrap();
-
-        if block_comment_re.is_match(text) {
+        if BLOCK_COMMENT_RE.is_match(text) {
             Self::BlockCommentDelimeter(text)
-        } else if line_comment_re.is_match(text) {
+        } else if LINE_COMMENT_RE.is_match(text) {
             Self::LineComment(text)
-        } else if literal_re.is_match(text) {
+        } else if LITERAL_RE.is_match(text) {
             Self::LiteralDelimeter(text)
         } else {
             Self::Text(text)

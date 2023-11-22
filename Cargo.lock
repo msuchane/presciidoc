@@ -243,6 +243,7 @@ dependencies = [
  "bpaf",
  "color-eyre",
  "log",
+ "once_cell",
  "regex",
  "simplelog",
  "time",
